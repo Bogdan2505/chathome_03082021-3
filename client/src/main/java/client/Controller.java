@@ -24,6 +24,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -43,7 +44,7 @@ public class Controller implements Initializable {
     private HBox msgPanel;
 
     private Socket socket;
-    private final int PORT = 8189;
+    private final int PORT = 8187;
     private final String IP_ADDRESS = "localhost";
     private DataInputStream in;
     private DataOutputStream out;
@@ -136,6 +137,10 @@ public class Controller implements Initializable {
                                         clientList.getItems().add(token[i]);
                                     }
                                 });
+                            }
+                            if (str.startsWith("/yournickis ")) {
+                                nickname = str.split(" ")[1];
+                                setTitle(nickname);
                             }
                         } else {
                             textArea.appendText(str + "\n");

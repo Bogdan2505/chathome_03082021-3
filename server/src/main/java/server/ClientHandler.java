@@ -24,11 +24,9 @@ public class ClientHandler {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
-
-
             new Thread(() -> {
                 try {
-                    socket.setSoTimeout(5000);
+                //    socket.setSoTimeout(500000);
                     // цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
@@ -98,6 +96,7 @@ public class ClientHandler {
                 }catch (SocketTimeoutException e){
                     try {
                         out.writeUTF("/end");
+
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }

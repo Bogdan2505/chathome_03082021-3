@@ -3,22 +3,28 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.sql.Statement;
+import java.sql.Connection;
 
 public class Server {
     private ServerSocket server;
     private Socket socket;
-    private final int PORT = 8189;
+    private final int PORT = 8187;
 
     private List<ClientHandler> clients;
     private AuthService authService;
 
     public Server() {
         clients = new CopyOnWriteArrayList<>();
-        authService = new SimpleAuthService();
-        try {
 
+        if (!SQLHandler.connect()) {
+            throw new RuntimeException("Не удалось подключиться к БД");
+        }
+        authService = new DateBaseAuthServise();
+        try {
             server = new ServerSocket(PORT);
             System.out.println("Server started!");
 
@@ -30,6 +36,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            SQLHandler.disconnect();
             try {
                 server.close();
             } catch (IOException e) {
@@ -56,7 +63,7 @@ public class Server {
                 return;
             }
         }
-        sender.sendMsg("Not found user: "+ receiver);
+        sender.sendMsg("Not found user: " + receiver);
     }
 
     public boolean isLoginAuthenticated(String login) {
@@ -91,6 +98,7 @@ public class Server {
     }
 
     public AuthService getAuthService() {
-        return authService;
+       return authService;
+
     }
 }
